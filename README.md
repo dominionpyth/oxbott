@@ -1,2 +1,930 @@
-# oxbott
- 𝔹𝕆𝕋 𝕀𝕊 𝕊𝕀𝕄ℙ𝕃𝔼 𝕎𝔸 𝔹𝕆𝕋 ℕ𝕆𝕎 𝔼ℕ𝕁𝕆𝕐 𝕊ℙ𝔼𝔼𝔻 𝔸ℕ𝔻 𝔽𝔸𝕊𝕋 𝔻𝔼ℙ𝕃𝕆𝕐𝕄𝔼ℕ𝕋
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OX-Bot - WhatsApp Automation</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #25D366;
+            --secondary-color: #128C7E;
+            --dark-bg: #121212;
+            --dark-card: #1E1E1E;
+            --dark-text: #FFFFFF;
+            --dark-text-secondary: #B0B0B0;
+            --light-bg: #FFFFFF;
+            --light-card: #F5F5F5;
+            --light-text: #121212;
+            --light-text-secondary: #545454;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--light-card);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        body.dark-mode header {
+            background-color: var(--dark-card);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light-text);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        body.dark-mode .nav-links a {
+            color: var(--dark-text);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .theme-toggle {
+            color: var(--dark-text);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: var(--dark-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 5rem 0;
+            text-align: center;
+            background-color: var(--light-card);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .hero {
+            background-color: var(--dark-card);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            color: var(--light-text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        body.dark-mode .hero p {
+            color: var(--dark-text-secondary);
+        }
+
+        .bot-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--light-card);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        body.dark-mode .feature-card {
+            background-color: var(--dark-card);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--light-text-secondary);
+            line-height: 1.6;
+        }
+
+        body.dark-mode .feature-card p {
+            color: var(--dark-text-secondary);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 5rem 0;
+            background-color: var(--light-card);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .how-it-works {
+            background-color: var(--dark-card);
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--light-text-secondary);
+            line-height: 1.6;
+        }
+
+        body.dark-mode .step-content p {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Community Section */
+        .community {
+            padding: 5rem 0;
+        }
+
+        .community-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .community-content p {
+            max-width: 700px;
+            line-height: 1.6;
+            color: var(--light-text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        body.dark-mode .community-content p {
+            color: var(--dark-text-secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--light-card);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .social-link {
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
+        }
+
+        .social-link.whatsapp {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .social-link.github {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background-color: var(--light-card);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .contact {
+            background-color: var(--dark-card);
+        }
+
+        .contact-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group textarea {
+            background-color: var(--dark-bg);
+            border-color: #444;
+            color: var(--dark-text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            background-color: var(--light-card);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        body.dark-mode footer {
+            background-color: var(--dark-card);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer-logo i {
+            margin-right: 0.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .footer-links a {
+            color: var(--dark-text-secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            color: var(--light-text-secondary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        body.dark-mode .copyright {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: var(--light-card);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 2rem;
+                transition: var(--transition);
+            }
+
+            body.dark-mode .nav-links {
+                background-color: var(--dark-card);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-links {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .social-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fab fa-whatsapp"></i>
+                    OX-Bot
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="menu-toggle" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="https://picsum.photos/seed/oxbot/200/200.jpg" alt="OX-Bot" class="bot-image">
+                <h1>OX-Bot: Your WhatsApp Automation Solution</h1>
+                <p>Experience the power of automation with OX-Bot. Streamline your WhatsApp communications, save time, and enhance productivity with our intelligent bot solution.</p>
+                <a href="https://wa.me/9133167169?text=Get%20Pairing%20Code" class="cta-button">Get Pairing Code</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Intelligent Commands</h3>
+                    <p>Access a wide range of commands to automate tasks, get information, and interact with services directly through WhatsApp.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Group Management</h3>
+                    <p>Easily manage your WhatsApp groups with automated moderation, welcome messages, and member management features.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Custom Notifications</h3>
+                    <p>Set up personalized notifications for important events, reminders, and updates delivered directly to your WhatsApp.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics & Insights</h3>
+                    <p>Track bot performance, user engagement, and message statistics with our comprehensive analytics dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure & Private</h3>
+                    <p>Your data is protected with end-to-end encryption. We prioritize your privacy and ensure secure communication.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Customizable</h3>
+                    <p>Tailor OX-Bot to your specific needs with custom commands, responses, and workflows.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Get Your Pairing Code</h3>
+                        <p>Click the "Get Pairing Code" button to receive your unique code via WhatsApp. This code will link your account to OX-Bot.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Configure Your Bot</h3>
+                        <p>Set up your preferences, customize commands, and configure the features you want to use through our intuitive dashboard.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Start Automating</h3>
+                        <p>Begin using OX-Bot in your WhatsApp chats. Access the menu with a simple command and explore all the automation possibilities.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Join Our Community</h3>
+                        <p>Connect with other OX-Bot users, share tips, and get the latest updates by joining our WhatsApp channel and GitHub community.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="community">
+        <div class="container">
+            <h2 class="section-title">Join Our Community</h2>
+            <div class="community-content">
+                <p>Connect with other OX-Bot users, get support, share your experiences, and stay updated with the latest features and improvements. Join our growing community today!</p>
+                <div class="social-links">
+                    <a href="https://whatsapp.com/channel/0029VbBwz6gDTkK9heWqFy1v" class="social-link whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp Channel
+                    </a>
+                    <a href="#" class="social-link github" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub Page
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <form class="contact-form" id="contact-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Preferred Contact Time</label>
+                        <input type="text" id="time" name="time" placeholder="e.g., Weekdays 9-5">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="title">Subject</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fab fa-whatsapp"></i>
+                    OX-Bot
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <p class="copyright">© 2023 OX-Bot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const themeIcon = themeToggle.querySelector('i');
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            if (navLinks.classList.contains('active')) {
+                menuToggle.querySelector('i').classList.replace('fa-bars', 'fa-times');
+            } else {
+                menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submission
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const formData = new FormData(contactForm);
+            const formValues = Object.fromEntries(formData);
+            
+            // Here you would normally send the data to a server
+            // For this example, we'll just log it and show an alert
+            console.log('Form submitted with the following data:', formValues);
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.textContent = 'Thank you for your message! We will get back to you soon.';
+            successMessage.style.padding = '1rem';
+            successMessage.style.backgroundColor = 'var(--primary-color)';
+            successMessage.style.color = 'white';
+            successMessage.style.borderRadius = '8px';
+            successMessage.style.marginTop = '1rem';
+            successMessage.style.textAlign = 'center';
+            
+            contactForm.appendChild(successMessage);
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Remove success message after 5 seconds
+            setTimeout(() => {
+                successMessage.remove();
+            }, 5000);
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
